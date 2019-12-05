@@ -1,0 +1,87 @@
+body {
+  background-color: rgb(2350, 250, 250, 1);
+}
+
+#title {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.form-group {
+  margin: auto;
+  margin-top: 1rem;
+  width: 50%;
+}
+
+#button-div {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+#game {
+  display: none;
+  margin-top: 1rem;
+}
+
+#headers {
+  display: flex;
+  justify-content: space-around;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+.game-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+ul {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  list-style: none;
+  overflow: scroll;
+  height: 25rem;
+  box-shadow: 2px 2px 10px gray;
+
+  border: 1px solid #bbbbbb;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#starter-form {
+  display: none;
+}
+
+.fa-redo-alt:hover {
+  color: green;
+}
+
+.fa-trash-alt {
+  visibility: hidden;
+}
+
+.listItemText {
+  float: left;
+}
+
+li:hover .fa-trash-alt {
+  visibility: visible;
+}
+
+.fa-trash-alt:hover {
+  color: red;
+}
+
+.fa-redo-alt {
+  font-size: 1rem;
+}
