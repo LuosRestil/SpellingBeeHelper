@@ -85,6 +85,30 @@ function deleteWord(element) {
   element.parentNode.parentNode.removeChild(element.parentNode);
 }
 
+function submitWord() {
+  let word = document.getElementById("word-input").value.toLowerCase();
+  if (
+    wordList.includes(word) ||
+    !word.includes(magicLetter) ||
+    !(word.length >= 5) ||
+    !isValid(word)
+  ) {
+    alert("Invalid word.");
+    document.getElementById("word-input").value = "";
+  } else {
+    wordList.push(word);
+    if (lettersList.every(letter => word.includes(letter))) {
+      score += 3;
+    } else {
+      score += 1;
+    }
+    document.getElementById("score").innerHTML = `Score: ${score}`;
+    document.getElementById("word-input").value = "";
+    saveLocalStorage();
+    generateWordDisplay();
+  }
+}
+
 // *************************************************************************
 
 window.addEventListener("DOMContentLoaded", event => {
@@ -116,28 +140,7 @@ window.addEventListener("DOMContentLoaded", event => {
 
   // Submit button logic on click
   document.getElementById("submit-word").addEventListener("click", function(e) {
-    let word = document.getElementById("word-input").value;
-
-    if (
-      wordList.includes(word) ||
-      !word.includes(magicLetter) ||
-      !(word.length >= 5) ||
-      !isValid(word)
-    ) {
-      alert("Invalid word.");
-      document.getElementById("word-input").value = "";
-    } else {
-      wordList.push(word);
-      if (lettersList.every(letter => word.includes(letter))) {
-        score += 3;
-      } else {
-        score += 1;
-      }
-      document.getElementById("score").innerHTML = `Score: ${score}`;
-      document.getElementById("word-input").value = "";
-      saveLocalStorage();
-      generateWordDisplay();
-    }
+    submitWord();
   });
 
   // Check local storage for save data
@@ -177,27 +180,7 @@ window.addEventListener("DOMContentLoaded", event => {
     // Submit button logic on Enter
     document.addEventListener("keyup", function(event) {
       if (event.keyCode == 13) {
-        let word = document.getElementById("word-input").value;
-        if (
-          wordList.includes(word) ||
-          !word.includes(magicLetter) ||
-          !(word.length >= 5) ||
-          !isValid(word)
-        ) {
-          alert("Invalid word.");
-          document.getElementById("word-input").value = "";
-        } else {
-          wordList.push(word);
-          if (lettersList.every(letter => word.includes(letter))) {
-            score += 3;
-          } else {
-            score += 1;
-          }
-          document.getElementById("score").innerHTML = `Score: ${score}`;
-          document.getElementById("word-input").value = "";
-          saveLocalStorage();
-          generateWordDisplay();
-        }
+        submitWord();
       }
     });
   }
@@ -266,27 +249,7 @@ window.addEventListener("DOMContentLoaded", event => {
         // Submit button logic on Enter
         document.addEventListener("keyup", function(event) {
           if (event.keyCode == 13) {
-            let word = document.getElementById("word-input").value;
-            if (
-              wordList.includes(word) ||
-              !word.includes(magicLetter) ||
-              !(word.length >= 5) ||
-              !isValid(word)
-            ) {
-              alert("Invalid word.");
-              document.getElementById("word-input").value = "";
-            } else {
-              wordList.push(word);
-              if (lettersList.every(letter => word.includes(letter))) {
-                score += 3;
-              } else {
-                score += 1;
-              }
-              document.getElementById("score").innerHTML = `Score: ${score}`;
-              document.getElementById("word-input").value = "";
-              saveLocalStorage();
-              generateWordDisplay();
-            }
+            submitWord();
           }
         });
       });
