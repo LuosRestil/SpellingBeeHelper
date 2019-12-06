@@ -234,12 +234,7 @@ window.addEventListener("DOMContentLoaded", event => {
         document.getElementById("score").innerHTML = `Score: ${score}`;
 
         // Display game
-        document
-          .getElementById("game")
-          .setAttribute(
-            "style",
-            "display:grid; grid-template-columns: 1fr 1fr 1fr"
-          );
+        document.getElementById("game").setAttribute("style", "display:block");
 
         // Submit button logic on Enter
         document.addEventListener("keyup", function(event) {
