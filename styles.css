@@ -1,11 +1,13 @@
 body {
-  background-color: rgb(2350, 250, 250, 1);
+  background: linear-gradient(130deg, #1cb5e0 0%, #000851 100%) fixed;
 }
 
 #title {
   text-align: center;
   margin-top: 1rem;
   font-family: "Allura", cursive;
+  font-size: 4rem;
+  color: white;
 }
 
 .form-group {
@@ -29,6 +31,7 @@ body {
   justify-content: space-around;
   grid-column-start: 1;
   grid-column-end: 4;
+  color: white;
 }
 
 .game-header {
@@ -38,19 +41,31 @@ body {
   align-items: center;
 }
 
+#input-container {
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+#word-input {
+  width: 30%;
+}
+
+button {
+  margin: 0 0 0 0.5rem;
+}
+
 ul {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  margin-top: 1rem;
+  background-color: white;
   padding-top: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
   list-style: none;
   overflow: scroll;
   height: 25rem;
-  box-shadow: 2px 2px 10px gray;
-
+  width: 50%;
   border: 1px solid #bbbbbb;
+  margin: 0 auto 0 auto;
 }
 
 li {
@@ -64,10 +79,10 @@ li {
 }
 
 .fa-redo-alt:hover {
-  color: green;
+  color: white;
 }
 
-.fa-trash-alt {
+.fa-times-circle {
   visibility: hidden;
 }
 
@@ -79,14 +94,72 @@ li:hover {
   background-color: #eeeeee;
 }
 
-li:hover .fa-trash-alt {
+li:hover .fa-times-circle {
   visibility: visible;
 }
 
-.fa-trash-alt:hover {
+.fa-times-circle:hover {
   color: red;
 }
 
 .fa-redo-alt {
   font-size: 1rem;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media (max-width: 600px) {
+  #title {
+    font-size: 3rem;
+    margin-top: 2rem;
+  }
+
+  #headers {
+    display: block;
+  }
+
+  .game-header {
+    font-size: 1.5rem;
+  }
+  ul {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    list-style: none;
+    overflow: scroll;
+    height: 50vh;
+    box-shadow: 2px 2px 10px gray;
+    border: 1px solid #bbbbbb;
+  }
+
+  .fa-times-circle {
+    visibility: visible;
+    color: red;
+  }
+
+  .fa-redo-alt:hover {
+    color: black;
+  }
+
+  ul {
+    width: 80%;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media (min-width: 600px) {
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media (min-width: 768px) {
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media (min-width: 1200px) {
 }

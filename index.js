@@ -50,7 +50,7 @@ function generateWordDisplay() {
       .getElementById("word-list")
       .insertAdjacentHTML(
         "beforeend",
-        `<li class='listItem'><span class='listItemText'>${word}</span><i class="far fa-trash-alt"></i></li>`
+        `<li class='listItem'><span class='listItemText'>${word}</span><i class="fas fa-times-circle"></i></li>`
       );
   }
 }
@@ -116,7 +116,7 @@ window.addEventListener("DOMContentLoaded", event => {
   let listDisplay = document.getElementById("word-list");
   listDisplay.addEventListener("click", function(e) {
     const element = e.target;
-    if (element.classList.contains("fa-trash-alt")) {
+    if (element.classList.contains("fa-times-circle")) {
       deleteWord(element);
     }
   });
@@ -170,12 +170,7 @@ window.addEventListener("DOMContentLoaded", event => {
     generateWordDisplay();
 
     // Display game
-    document
-      .getElementById("game")
-      .setAttribute(
-        "style",
-        "display:grid; grid-template-columns: 1fr 1fr 1fr"
-      );
+    document.getElementById("game").setAttribute("style", "display:block");
 
     // Submit button logic on Enter
     document.addEventListener("keyup", function(event) {
