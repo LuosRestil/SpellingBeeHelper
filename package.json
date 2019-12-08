@@ -1,0 +1,25 @@
+{
+  "name": "nyt-spelling-bee-helper",
+  "version": "0.0.1",
+  "description": "Web app helper for the Sunday New York Times Spelling Bee puzzle",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "node-fetch": "^2.6.0"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/nyt-spelling-bee-helper"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ]
+}
