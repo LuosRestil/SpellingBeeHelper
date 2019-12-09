@@ -130,7 +130,7 @@ window.addEventListener("DOMContentLoaded", event => {
           alert(definition);
         })
         .catch(err => {
-          alert('Oh nooooo, something went horribly wrooooong.');
+          console.log(err);
         });
     }
   });
