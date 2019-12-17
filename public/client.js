@@ -8,11 +8,6 @@ let score = 0;
 let wordNumber = 0;
 
 // *** FUNCTIONS ***
-// Checks that a letter is in a word
-function isInWord(currentValue) {
-  return word.includes(currentValue);
-}
-
 // Checks that all letters of a word are in the letters list
 function isValid(word) {
   for (let letter of word) {
@@ -41,8 +36,8 @@ function shuffle(array) {
   return array;
 }
 
+// Display words alphabetically
 function generateWordDisplay() {
-  // Display words alphabetically
   let sortedWords = wordList.slice().sort();
   document.getElementById("word-list").innerHTML = "";
   for (let word of sortedWords) {
@@ -119,6 +114,23 @@ window.addEventListener("DOMContentLoaded", event => {
     if (element.classList.contains("fa-times-circle")) {
       deleteWord(element);
     }
+    let toMatch = element.innerHTML;
+    let match = toMatch.match(/^[A-Za-z][A-Za-z]+/g);
+    if (match) {
+      let toDefine = match[0];
+      fetch(`https://nyt-spelling-bee-helper.glitch.me/define?word=${toDefine}`)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          let definition =
+            data.definition[0].toUpperCase() + data.definition.slice(1);
+          alert(definition);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   });
 
   // New Game button logic
@@ -151,7 +163,7 @@ window.addEventListener("DOMContentLoaded", event => {
     // Hide loading screen
     document.getElementById("loading-screen").style.display = "none";
     // Parse storage data
-    saveData = JSON.parse(storage);
+    let saveData = JSON.parse(storage);
     // Populate variables with data
     magicLetter = saveData.magicLetter;
     letters = saveData.letters;
