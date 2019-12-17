@@ -107,7 +107,7 @@ function submitWord() {
 // *************************************************************************
 
 window.addEventListener("DOMContentLoaded", event => {
-  // Delete button event listener
+  // Define/delete event listener
   let listDisplay = document.getElementById("word-list");
   listDisplay.addEventListener("click", function(e) {
     const element = e.target;
@@ -118,7 +118,7 @@ window.addEventListener("DOMContentLoaded", event => {
     let match = toMatch.match(/^[A-Za-z][A-Za-z]+/g);
     if (match) {
       let toDefine = match[0];
-      fetch(`https://nyt-spelling-bee-helper.glitch.me/define?word=${toDefine}`)
+      fetch(`../define?word=${toDefine}`)
         .then(response => {
           return response.json();
         })

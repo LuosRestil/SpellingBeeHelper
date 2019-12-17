@@ -1,4 +1,5 @@
 // init project
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const fetch = require("node-fetch");
@@ -17,7 +18,6 @@ app.get("/define", (req, res) => {
   )
     .then(response => response.json())
     .then(json => {
-      console.log(`response from webster == ${json[0]}`);
       if (json.length > 0 && typeof json[0] == "object") {
         let definition = json[0].shortdef[0];
         console.log(definition);
@@ -35,7 +35,6 @@ app.get("/define", (req, res) => {
         )
           .then(response => response.json())
           .then(json => {
-            console.log(`response from oxford == ${JSON.stringify(json)}`);
             if (json.error) {
               res.json({
                 definition: `No definition for "${req.query.word}" found.`
