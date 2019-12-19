@@ -5,6 +5,11 @@ const app = express();
 const fetch = require("node-fetch");
 const http = require("https");
 
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+
 app.use("/public", express.static(process.cwd() + "/public"));
 
 app.get("/", (req, res) => {
@@ -56,6 +61,6 @@ app.get("/define", (req, res) => {
 });
 
 // listen for requests :)
-const listener = app.listen(process.env.PORT || 3000, function() {
+const listener = app.listen(port, function() {
   console.log("Your app is listening on port " + listener.address().port);
 });
