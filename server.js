@@ -47,7 +47,7 @@ app.get("/define", (req, res) => {
             } else {
               let definition =
                 json.results[0].lexicalEntries[0].entries[0].senses[0]
-                  .shortDefinitions[0];
+                  .definitions[0];
               definition = definition[0].toUpperCase() + definition.slice(1);
               res.json({ definition: definition });
             }
