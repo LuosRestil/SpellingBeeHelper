@@ -1,4 +1,8 @@
-// init project
+// TODO TODO TODO
+// check each entry with a get request to the web search string
+// if response is not 200, it's not valid
+// clear input field and make it shake
+
 require("dotenv").config();
 const express = require("express");
 const app = express();
