@@ -25,8 +25,12 @@ app.get("/define", (req, res) => {
     .then(json => {
       if (json.length > 0 && typeof json[0] == "object") {
         let definition = json[0].shortdef[0];
-        console.log(definition);
-        res.json({ definition: definition });
+        if (definition) {
+          res.json({ definition: definition });
+        } else {
+          let variant = json[0].cxs[0].cxl + " " + json[0].cxs[0].cxtis[0].cxt;
+          res.json({ definition: variant });
+        }
       } else {
         // MAY NEED TO ADD LEMMAS ENDPOINT BEFORE ENTRIES
         let headers = {
