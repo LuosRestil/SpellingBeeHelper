@@ -115,8 +115,9 @@ async function submitWord() {
     !valid
   ) {
     console.log("word not valid");
-    alert("Invalid word.");
+    // alert("Invalid word.");
     document.getElementById("word-input").value = "";
+    $("#word-input").effect("shake", { distance: 5 });
   } else {
     wordList.push(word);
     if (lettersList.every(letter => word.includes(letter))) {
