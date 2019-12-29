@@ -20,6 +20,23 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
+app.get("/validate/:word", function(req, res) {
+  let word = req.params.word;
+  fetch(`https://www.merriam-webster.com/dictionary/${word}`).then(response => {
+    if (response.status == 200) {
+      res.send({ valid: true, dictionary: "webster" });
+    } else {
+      fetch(`https://www.lexico.com/definition/${word}`).then(response => {
+        if (response.url == `https://www.lexico.com/definition/${word}`) {
+          res.send({ valid: true, dictionary: "oxford" });
+        } else {
+          res.send({ valid: false, dictionary: "none" });
+        }
+      });
+    }
+  });
+});
+
 app.get("/define", (req, res) => {
   let toDefine = req.query.word.toLowerCase();
   fetch(
