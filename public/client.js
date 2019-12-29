@@ -73,6 +73,7 @@ function deleteWord(element) {
 }
 
 async function checkDictionaries(word) {
+  console.log("starting checkDictionaries function");
   let valid;
   let dictionary;
   await fetch(`../validate/${word}`)

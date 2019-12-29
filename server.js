@@ -27,7 +27,7 @@ app.get("/validate/:word", function(req, res) {
       res.send({ valid: true, dictionary: "webster" });
     } else {
       fetch(`https://www.lexico.com/definition/${word}`).then(response => {
-        if (response.url == `https://www.lexico.com/definition/${word}`) {
+        if (!response.url.includes("query")) {
           res.send({ valid: true, dictionary: "oxford" });
         } else {
           res.send({ valid: false, dictionary: "none" });
