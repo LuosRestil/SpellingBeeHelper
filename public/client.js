@@ -73,29 +73,34 @@ function deleteWord(element) {
 }
 
 async function checkDictionaries(word) {
-  console.log("starting checkDictionaries function");
-  let valid;
-  let dictionary;
-  await fetch(`../validate/${word}`)
+  let webster;
+  let oxford;
+  await fetch(`../validateWebster/${word}`)
     .then(response => response.json())
     .then(json => {
-      valid = json.valid;
-      dictionary = json.dictionary;
+      webster = json.valid;
     });
-  console.log(`valid == ${valid}`);
-  console.log(`dictionary == ${dictionary}`);
-  return valid;
+  await fetch(`../validateOxford/${word}`)
+    .then(response => response.json())
+    .then(json => {
+      oxford = json.valid;
+    });
+  if (webster) {
+    return webster;
+  } else if (oxford) {
+    return oxford;
+  } else {
+    return false;
+  }
 }
 
 async function isValid(word) {
-  console.log("starting isValid function");
   for (let letter of word) {
     if (!lettersList.includes(letter)) {
       return false;
     }
   }
   let dictValid = await checkDictionaries(word);
-  console.log(`dictValid == ${dictValid}`);
   if (dictValid) {
     return true;
   } else {
@@ -104,18 +109,14 @@ async function isValid(word) {
 }
 
 async function submitWord() {
-  console.log("starting submit function");
   let word = document.getElementById("word-input").value.toLowerCase();
   let valid = await isValid(word);
-  console.log(`valid == ${valid}`);
   if (
     wordList.includes(word) ||
     !word.includes(magicLetter) ||
     !(word.length >= 5) ||
     !valid
   ) {
-    console.log("word not valid");
-    // alert("Invalid word.");
     document.getElementById("word-input").value = "";
     $("#word-input").effect("shake", { distance: 5 });
   } else {

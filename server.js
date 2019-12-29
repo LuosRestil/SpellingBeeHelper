@@ -1,13 +1,9 @@
-// TODO TODO TODO
-// check each entry with a get request to the web search string
-// if response is not 200, it's not valid
-// clear input field and make it shake
-
 require("dotenv").config();
 const express = require("express");
 const app = express();
 const fetch = require("node-fetch");
-const http = require("https");
+const cheerio = require("cheerio");
+const request = require("request");
 
 let port = process.env.PORT;
 if (port == null || port == "") {
@@ -20,19 +16,62 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-app.get("/validate/:word", function(req, res) {
+app.get("/validateWebster/:word", async function(req, res) {
   let word = req.params.word;
-  fetch(`https://www.merriam-webster.com/dictionary/${word}`).then(response => {
-    if (response.status == 200) {
-      res.send({ valid: true, dictionary: "webster" });
-    } else {
-      fetch(`https://www.lexico.com/definition/${word}`).then(response => {
-        if (!response.url.includes("query")) {
-          res.send({ valid: true, dictionary: "oxford" });
+  let valid;
+  await fetch(`https://www.merriam-webster.com/dictionary/${word}`)
+    .then(response => {
+      if (response.status == 200) {
+        return response.text();
+      } else {
+        valid = false;
+      }
+    })
+    .then(text => {
+      if (text) {
+        const $ = cheerio.load(text);
+        // MISSING WORDS WHERE MAIN ENTRY HAS HYPHEN BUT ALT DOES NOT
+        const hword = $("h1.hword").text();
+        if (hword.match(/[A-Z\-]/)) {
+          valid = false;
         } else {
-          res.send({ valid: false, dictionary: "none" });
+          valid = true;
         }
-      });
+      }
+    });
+  if (valid) {
+    res.send({ valid: true });
+  } else {
+    res.send({ valid: false });
+  }
+});
+
+app.get("/validateOxford/:word", function(req, res) {
+  let word = req.params.word;
+  request(`https://www.lexico.com/definition/${word}`, function(
+    error,
+    response,
+    body
+  ) {
+    let valid;
+    let header = response.socket._httpMessage._header;
+    let headerArr = header.split(" ");
+    let path = headerArr[1];
+    if (!path.includes("&")) {
+      const $ = cheerio.load(body);
+      let hw = $("span.hw").text();
+      if (hw.match(/[A-Z]/)) {
+        valid = false;
+      } else {
+        valid = true;
+      }
+    } else {
+      valid = false;
+    }
+    if (valid) {
+      res.send({ valid: true });
+    } else {
+      res.send({ valid: false });
     }
   });
 });
