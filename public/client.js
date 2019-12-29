@@ -126,6 +126,7 @@ async function submitWord() {
       score += 1;
     }
     document.getElementById("score").innerHTML = `Score: ${score}`;
+    $("#word-input").effect("highlight", { color: "#A5FF8E" });
     document.getElementById("word-input").value = "";
     saveLocalStorage();
     generateWordDisplay();
