@@ -20,29 +20,57 @@ app.get("/", (req, res) => {
 app.get("/validateWebster/:word", async function(req, res) {
   console.log("webster: checking");
   let word = req.params.word;
-  let valid;
+  let valid = false;
   await fetch(`https://www.merriam-webster.com/dictionary/${word}`)
     .then(response => {
       if (response.status == 200) {
         return response.text();
-      } else {
-        valid = false;
       }
     })
     .then(text => {
       if (text) {
         const $ = cheerio.load(text);
         const hword = $("h1.hword").text();
-        if (hword.match(/[A-Z\-]/)) {
-          valid = false;
-        } else {
+        if (hword == word) {
           valid = true;
+        } else if (word.endsWith("s") && hword == word.slice(-1)) {
+          valid = true;
+        } else if (word.endsWith("es") && hword == word.slice(-2)) {
+          valid = true;
+        } else if (word.endsWith("ies") && hword == `${word.slice(-3)}y`) {
+          valid = true;
+        } else {
+          console.log("webster: hword !== word");
+          if ($("span.va")) {
+            console.log("webster: variations found");
+            let variations = $("span.va")
+              .toArray()
+              .map(elem => $(elem).text());
+            console.log(`variations == ${variations}`);
+            for (let variation of variations) {
+              if (variation == word) {
+                valid = true;
+              }
+            }
+          } else if ($("span.if")) {
+            console.log("webster: forms found");
+            let forms = $("span.if")
+              .toArray()
+              .map(elem => $(elem).text());
+            for (let form of forms) {
+              if (form == word) {
+                valid = true;
+              }
+            }
+          }
         }
       }
     });
   if (valid) {
+    console.log("webster: valid");
     res.send({ valid: true });
   } else {
+    console.log("webster: invalid");
     res.send({ valid: false });
   }
 });
