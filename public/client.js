@@ -100,6 +100,7 @@ async function isValid(word) {
       return false;
     }
   }
+
   let dictValid = await checkDictionaries(word);
   if (dictValid) {
     return true;

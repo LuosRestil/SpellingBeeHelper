@@ -4,6 +4,7 @@ const app = express();
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 const request = require("request");
+// const fs = require("fs");
 
 let port = process.env.PORT;
 if (port == null || port == "") {
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/validateWebster/:word", async function(req, res) {
+  console.log("webster: checking");
   let word = req.params.word;
   let valid;
   await fetch(`https://www.merriam-webster.com/dictionary/${word}`)
@@ -30,7 +32,6 @@ app.get("/validateWebster/:word", async function(req, res) {
     .then(text => {
       if (text) {
         const $ = cheerio.load(text);
-        // MISSING WORDS WHERE MAIN ENTRY HAS HYPHEN BUT ALT DOES NOT
         const hword = $("h1.hword").text();
         if (hword.match(/[A-Z\-]/)) {
           valid = false;
@@ -124,7 +125,6 @@ app.get("/define", (req, res) => {
     });
 });
 
-// listen for requests :)
 const listener = app.listen(port, function() {
   console.log("Your app is listening on port " + listener.address().port);
 });
