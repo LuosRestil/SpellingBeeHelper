@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 
 async function validateWebster(word) {
+  console.log(`word == ${word}`);
   return await fetch(`https://www.merriam-webster.com/dictionary/${word}`)
     .then(response => {
       if (response.status == 200) {
