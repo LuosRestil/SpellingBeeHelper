@@ -2,13 +2,26 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const fetch = require("node-fetch");
-const cheerio = require("cheerio");
 const validate = require("./validate.js");
+const { Client } = require("pg");
+const { Storage } = require("@google-cloud/storage");
+const path = require("path");
 
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 8000;
 }
+
+const storage = new Storage();
+const avatarBucket = gc.bucket("nytsb-avatars");
+
+let client = new Client({
+  user: "postgres",
+  host: "localhost",
+  database: "spelling-bee",
+  password: "password",
+  port: 5432
+});
 
 app.use("/public", express.static(process.cwd() + "/public"));
 
@@ -17,7 +30,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/validateWebster/:word", async function(req, res) {
-  console.log("##################################################");
+  console.log("########################################");
   console.log("webster: checking");
   let word = req.params.word;
   let valid = await validate.validateWebster(word);
