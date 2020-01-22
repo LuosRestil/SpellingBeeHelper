@@ -80,17 +80,15 @@ async function checkDictionaries(word) {
     .then(json => {
       webster = json.valid;
     });
-  await fetch(`../validateOxford/${word}`)
-    .then(response => response.json())
-    .then(json => {
-      oxford = json.valid;
-    });
   if (webster) {
     return webster;
-  } else if (oxford) {
-    return oxford;
   } else {
-    return false;
+    await fetch(`../validateOxford/${word}`)
+      .then(response => response.json())
+      .then(json => {
+        oxford = json.valid;
+      });
+    return oxford;
   }
 }
 

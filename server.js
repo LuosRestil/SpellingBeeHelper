@@ -3,8 +3,7 @@ const express = require("express");
 const app = express();
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
-const request = require("request");
-// const fs = require("fs");
+const validate = require("./validate.js");
 
 let port = process.env.PORT;
 if (port == null || port == "") {
@@ -18,61 +17,14 @@ app.get("/", (req, res) => {
 });
 
 app.get("/validateWebster/:word", async function(req, res) {
+  console.log("##################################################");
   console.log("webster: checking");
   let word = req.params.word;
-  console.log(`word == ${word}`);
-  let valid = false;
-  await fetch(`https://www.merriam-webster.com/dictionary/${word}`)
-    .then(response => {
-      if (response.status == 200) {
-        return response.text();
-      }
-    })
-    .then(text => {
-      if (text) {
-        const $ = cheerio.load(text);
-        const hword = $("h1.hword").text();
-        console.log(`hword == ${hword}`);
-        if (hword == word) {
-          valid = true;
-        } else if (word.endsWith("s") && hword == word.slice(0, -1)) {
-          valid = true;
-        } else if (word.endsWith("es") && hword == word.slice(0, -2)) {
-          valid = true;
-        } else if (word.endsWith("ies") && hword == `${word.slice(0, -3)}y`) {
-          valid = true;
-        } else {
-          console.log("webster: hword !== word");
-          if ($("span.va")) {
-            console.log("webster: variations found");
-            let variations = $("span.va")
-              .toArray()
-              .map(elem => $(elem).text());
-            console.log(`variations == ${variations}`);
-            for (let variation of variations) {
-              if (variation == word) {
-                valid = true;
-              }
-            }
-          } else if ($("span.if")) {
-            console.log("webster: forms found");
-            let forms = $("span.if")
-              .toArray()
-              .map(elem => $(elem).text());
-            for (let form of forms) {
-              if (form == word) {
-                valid = true;
-              }
-            }
-          }
-        }
-      }
-    });
+  let valid = await validate.validateWebster(word);
+  console.log(`validateWebster == ${valid}`);
   if (valid) {
-    console.log("webster: valid");
     res.send({ valid: true });
   } else {
-    console.log("webster: invalid");
     res.send({ valid: false });
   }
 });
@@ -80,74 +32,11 @@ app.get("/validateWebster/:word", async function(req, res) {
 app.get("/validateOxford/:word", async function(req, res) {
   console.log("oxford: checking");
   let word = req.params.word;
-  let valid = false;
-  await fetch(`https://www.lexico.com/definition/${word}`)
-    .then(response => response.text())
-    .then(text => {
-      if (text) {
-        const $ = cheerio.load(text);
-        let noExactMatches = $("div.no-exact-matches").text();
-        if (!noExactMatches) {
-          console.log("found a page");
-          // NEXT LINE SYNTAX INTENTIONALLY INCORRECT, FIX WHEN DONE TESTING
-          let hw = $("span .hw").text();
-          if (hw == word) {
-            valid = true;
-          } else if (word.endsWith("s") && hw == word.slice(-1)) {
-            valid = true;
-          } else if (word.endsWith("es") && hw == word.slice(-2)) {
-            valid = true;
-          } else if (word.endsWith("ies") && hw == `${word.slice(-3)}y`) {
-            valid = true;
-          } else {
-            console.log("oxford: hw !== word");
-            let forms = $("span.inflection-text")
-              .find("span")
-              .toArray()
-              .map(elem => {
-                let text = $(elem).text();
-                if (text.endsWith(", ")) {
-                  return text.slice(0, -2);
-                } else {
-                  return text;
-                }
-              });
-            if (forms.length > 0) {
-              console.log("oxford: forms found");
-              for (let form of forms) {
-                if (form == word) {
-                  valid = true;
-                }
-              }
-            }
-            let variations = $("div.variant")
-              .find("strong")
-              .toArray()
-              .map(elem => $(elem).text());
-            if (variations.length > 0) {
-              console.log("oxford: variations found");
-              for (let variation of variations) {
-                if (variation == word) {
-                  valid = true;
-                }
-              }
-            }
-          }
-        } else {
-          console.log("oxford: no exact matches");
-          let similar = $("div.similar-results")
-            .find("a")
-            .attr("href");
-          console.log(similar);
-          // CALL GET OXFORD FUNCTION ON SIMILAR
-        }
-      }
-    });
+  let valid = await validate.validateOxford(word, word, 0);
+  console.log(`validateOxford == ${valid}`);
   if (valid) {
-    console.log("oxford: valid");
     res.send({ valid: true });
   } else {
-    console.log("oxford: invalid");
     res.send({ valid: false });
   }
 });
