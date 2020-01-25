@@ -34,6 +34,19 @@ async function validateWebster(word) {
               if (variation == word) {
                 console.log(`webster: ${word} is a variation of ${hword}`);
                 return true;
+              } else if (word.endsWith("s") && variation == word.slice(0, -1)) {
+                console.log(
+                  `webster: ${word} is a plural of a variation of ${hword}`
+                );
+                return true;
+              } else if (
+                word.endsWith("es") &&
+                variation == word.slice(0, -2)
+              ) {
+                console.log(
+                  `webster: ${word} is a plural of a variation of ${hword}`
+                );
+                return true;
               }
             }
           }
@@ -46,6 +59,15 @@ async function validateWebster(word) {
               if (form == word) {
                 console.log(`webster: ${word} is a form of ${hword}`);
                 return true;
+              } else if (word.endsWith("s") && form == word.slice(0, -1)) {
+                console.log(
+                  `webster: ${word} is a plural of a form of ${hword}`
+                );
+                return true;
+              } else if (word.endsWith("es") && form == word.slice(0, -2)) {
+                console.log(
+                  `webster: ${word} is a plural of a form of ${hword}`
+                );
               }
             }
           }
@@ -92,6 +114,16 @@ async function validateOxford(word, redirect, iteration) {
                   if (form == word) {
                     console.log(`oxford: ${word} is a form of ${redirect}`);
                     return true;
+                  } else if (word.endsWith("s") && form == word.slice(0, -1)) {
+                    console.log(
+                      `oxford: ${word} is a plural of a form of ${redirect}`
+                    );
+                    return true;
+                  } else if (word.endsWith("es") && form == word.slice(0, -2)) {
+                    console.log(
+                      `oxford: ${word} is a plural of a form of ${redirect}`
+                    );
+                    return true;
                   }
                 }
               }
@@ -104,6 +136,22 @@ async function validateOxford(word, redirect, iteration) {
                 for (let variation of variations) {
                   if (variation == word) {
                     console.log(`oxford: ${word} is a variant of ${redirect}`);
+                    return true;
+                  } else if (
+                    word.endsWith("s") &&
+                    variation == word.slice(0, -1)
+                  ) {
+                    console.log(
+                      `oxford: ${word} is a plural of a variant of ${redirect}`
+                    );
+                    return true;
+                  } else if (
+                    word.endsWith("s") &&
+                    variation == word.slice(0, -2)
+                  ) {
+                    console.log(
+                      `oxford: ${word} is a plural of a variant of ${redirect}`
+                    );
                     return true;
                   }
                 }
