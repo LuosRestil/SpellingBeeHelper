@@ -168,6 +168,7 @@ async function validateOxford(word, redirect, iteration) {
               );
               return validateOxford(word, similar, nextIteration);
             } else {
+              console.log("oxford: no matches or redirects");
               return false;
             }
           }
