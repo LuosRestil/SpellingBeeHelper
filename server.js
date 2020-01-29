@@ -3,25 +3,12 @@ const express = require("express");
 const app = express();
 const fetch = require("node-fetch");
 const validate = require("./validate.js");
-// const { Client } = require("pg");
-// const { Storage } = require("@google-cloud/storage");
 const path = require("path");
 
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 8000;
 }
-
-// const storage = new Storage();
-// const avatarBucket = gc.bucket("nytsb-avatars");
-
-// let client = new Client({
-//   user: "postgres",
-//   host: "localhost",
-//   database: "spelling-bee",
-//   password: "password",
-//   port: 5432
-// });
 
 app.use("/public", express.static(process.cwd() + "/public"));
 
@@ -70,7 +57,6 @@ app.get("/define", (req, res) => {
           res.json({ definition: variant });
         }
       } else {
-        // MAY NEED TO ADD LEMMAS ENDPOINT BEFORE ENTRIES
         let headers = {
           app_id: process.env.OXFORD_ID,
           app_key: process.env.OXFORD_KEY
