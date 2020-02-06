@@ -71,6 +71,30 @@ async function validateWebster(word) {
               }
             }
           }
+          let otherWordsFrom = $("span.ure")
+            .toArray()
+            .map(elem => $(elem).text());
+          if (otherWordsFrom.length > 1) {
+            console.log("webster: otherWordsFrom found");
+            for (let otherWord of otherWordsFrom) {
+              if (otherWord == word) {
+                console.log(`webster: ${word} is another word from ${hword}`);
+                return true;
+              } else if (word.endsWith("s") && otherWord == word.slice(0, -1)) {
+                console.log(
+                  `webster: ${word} is a plural of another word from ${hword}`
+                );
+                return true;
+              } else if (
+                word.endsWith("es") &&
+                otherWord == word.slice(0, -2)
+              ) {
+                console.log(
+                  `webster: ${word} is a plural of another word from ${hword}`
+                );
+              }
+            }
+          }
         }
       }
       return false;
