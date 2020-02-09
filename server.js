@@ -70,7 +70,6 @@ app.get("/define", (req, res) => {
           res.json({ definition: variant });
         }
       } else {
-        // MAY NEED TO ADD LEMMAS ENDPOINT BEFORE ENTRIES
         let headers = {
           app_id: process.env.OXFORD_ID,
           app_key: process.env.OXFORD_KEY
@@ -87,9 +86,26 @@ app.get("/define", (req, res) => {
                 definition: `No definition for "${req.query.word}" found.`
               });
             } else {
-              let definition =
+              console.log(
                 json.results[0].lexicalEntries[0].entries[0].senses[0]
-                  .definitions[0];
+              );
+              let definition;
+              if (
+                json.results[0].lexicalEntries[0].entries[0].senses[0]
+                  .definitions
+              ) {
+                definition =
+                  json.results[0].lexicalEntries[0].entries[0].senses[0]
+                    .definitions[0];
+              } else if (
+                json.results[0].lexicalEntries[0].entries[0].senses[0]
+                  .crossReferenceMarkers
+              ) {
+                definition =
+                  json.results[0].lexicalEntries[0].entries[0].senses[0]
+                    .crossReferenceMarkers[0];
+              }
+
               definition = definition[0].toUpperCase() + definition.slice(1);
               res.json({ definition: definition });
             }
