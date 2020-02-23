@@ -74,7 +74,6 @@ app.get("/define", (req, res) => {
           app_id: process.env.OXFORD_ID,
           app_key: process.env.OXFORD_KEY
         };
-
         fetch(
           `https://od-api.oxforddictionaries.com/api/v2/entries/en-us/${toDefine}`,
           { method: "GET", headers: headers }
@@ -86,25 +85,38 @@ app.get("/define", (req, res) => {
                 definition: `No definition for "${req.query.word}" found.`
               });
             } else {
-              console.log(
-                json.results[0].lexicalEntries[0].entries[0].senses[0]
-              );
+              console.log(json.results[0].lexicalEntries[0].entries[0]);
               let definition;
-              if (
-                json.results[0].lexicalEntries[0].entries[0].senses[0]
-                  .definitions
-              ) {
+              try {
                 definition =
                   json.results[0].lexicalEntries[0].entries[0].senses[0]
                     .definitions[0];
-              } else if (
-                json.results[0].lexicalEntries[0].entries[0].senses[0]
-                  .crossReferenceMarkers
-              ) {
-                definition =
-                  json.results[0].lexicalEntries[0].entries[0].senses[0]
-                    .crossReferenceMarkers[0];
+              } catch {
+                try {
+                  definition =
+                    json.results[0].lexicalEntries[0].entries[0].senses[0]
+                      .crossReferenceMarkers[0];
+                } catch {
+                  res.json({
+                    definition: `No definition for "${req.query.word}" found.`
+                  });
+                }
               }
+              // if (
+              //   json.results[0].lexicalEntries[0].entries[0].senses[0]
+              //     .definitions
+              // ) {
+              //   definition =
+              //     json.results[0].lexicalEntries[0].entries[0].senses[0]
+              //       .definitions[0];
+              // } else if (
+              //   json.results[0].lexicalEntries[0].entries[0].senses[0]
+              //     .crossReferenceMarkers
+              // ) {
+              //   definition =
+              //     json.results[0].lexicalEntries[0].entries[0].senses[0]
+              //       .crossReferenceMarkers[0];
+              // }
 
               definition = definition[0].toUpperCase() + definition.slice(1);
               res.json({ definition: definition });
