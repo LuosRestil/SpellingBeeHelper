@@ -92,10 +92,14 @@ li {
 
 .fa-times-circle {
   visibility: hidden;
+  color: red;
 }
 
 .listItemText {
   float: left;
+}
+.listItemText:hover {
+  cursor:pointer;
 }
 
 li:hover {

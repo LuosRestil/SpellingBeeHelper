@@ -4,16 +4,12 @@ const app = express();
 const fetch = require("node-fetch");
 const validate = require("./validate.js");
 // const { Client } = require("pg");
-// const { Storage } = require("@google-cloud/storage");
 const path = require("path");
 
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 8000;
 }
-
-// const storage = new Storage();
-// const avatarBucket = gc.bucket("nytsb-avatars");
 
 // let client = new Client({
 //   user: "postgres",
@@ -102,22 +98,6 @@ app.get("/define", (req, res) => {
                   });
                 }
               }
-              // if (
-              //   json.results[0].lexicalEntries[0].entries[0].senses[0]
-              //     .definitions
-              // ) {
-              //   definition =
-              //     json.results[0].lexicalEntries[0].entries[0].senses[0]
-              //       .definitions[0];
-              // } else if (
-              //   json.results[0].lexicalEntries[0].entries[0].senses[0]
-              //     .crossReferenceMarkers
-              // ) {
-              //   definition =
-              //     json.results[0].lexicalEntries[0].entries[0].senses[0]
-              //       .crossReferenceMarkers[0];
-              // }
-
               definition = definition[0].toUpperCase() + definition.slice(1);
               res.json({ definition: definition });
             }
