@@ -164,8 +164,13 @@ window.addEventListener("DOMContentLoaded", event => {
 
   // New Game button logic
   document.getElementById("newGame").addEventListener("click", e => {
-    window.localStorage.clear();
-    location.reload();
+    let confirmation = confirm(
+      "Are you sure you want to start a new game? Your current progress will be lost."
+    );
+    if (confirmation) {
+      window.localStorage.clear();
+      location.reload();
+    }
   });
 
   // Shuffle button logic
