@@ -74,7 +74,7 @@ async function validateWebster(word) {
           let otherWordsFrom = $("span.ure")
             .toArray()
             .map(elem => $(elem).text());
-          if (otherWordsFrom.length > 1) {
+          if (otherWordsFrom.length >= 1) {
             console.log("webster: otherWordsFrom found");
             for (let otherWord of otherWordsFrom) {
               if (otherWord == word) {
