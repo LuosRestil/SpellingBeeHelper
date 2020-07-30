@@ -112,7 +112,15 @@ async function validateOxford(word, redirect, iteration) {
           let noExactMatches = $("div.no-exact-matches").text();
           if (!noExactMatches) {
             let hw = $("span.hw").text();
-            if (hw == word) {
+            // THERE CAN BE MUlTIPLY HWORDS, ENDING IN NUMBERS
+            let hws = hw.split(/[0-9]/);
+            let hwEqualToWord = false;
+            for (let item of hws) {
+              if (item === word) {
+                hwEqualToWord = true;
+              }
+            }
+            if (hwEqualToWord) {
               console.log("oxford: hw == word");
               return true;
             } else if (word.endsWith("s") && hw == word.slice(0, -1)) {
