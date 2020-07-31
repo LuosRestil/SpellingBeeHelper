@@ -140,8 +140,15 @@ window.addEventListener("DOMContentLoaded", event => {
   let listDisplay = document.getElementById("word-list");
   listDisplay.addEventListener("click", function(e) {
     const element = e.target;
+    let wordToDelete = element.parentNode.childNodes[0].textContent;
     if (element.classList.contains("fa-times-circle")) {
-      deleteWord(element);
+      // CONFIRM WORD DELETION
+      let confirmation = confirm(
+        `Are you sure you want delete "${wordToDelete}"?`
+      );
+      if (confirmation) {
+        deleteWord(element);
+      }
     }
     let toMatch = element.innerHTML;
     let match = toMatch.match(/^[A-Za-z][A-Za-z]+/g);
