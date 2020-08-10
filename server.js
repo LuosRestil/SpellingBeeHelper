@@ -2,7 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const fetch = require("node-fetch");
+const bodyParser = require('body-parser');
 const validate = require("./validate.js");
+const solve = require("./solver.js");
 // const { Client } = require("pg");
 const path = require("path");
 
@@ -20,6 +22,9 @@ if (port == null || port == "") {
 // });
 
 app.use("/public", express.static(process.cwd() + "/public"));
+
+app.use(bodyParser.urlencoded({extended:false})) 
+app.use(bodyParser.json()) 
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
@@ -109,6 +114,13 @@ app.get("/define", (req, res) => {
       console.log(err);
     });
 });
+
+app.post('/solver', async function(req, res) {
+  console.log(req.body);
+  let data = await solve(req.body.magic, req.body.letters);
+  res.send(data);
+
+})
 
 const listener = app.listen(port, function() {
   console.log("Your app is listening on port " + listener.address().port);

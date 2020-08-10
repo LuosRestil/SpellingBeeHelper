@@ -26,7 +26,6 @@ async function solve(magic, letters) {
     if (valid) {
       words.push(line);
       if (letters.split('').every(letter => line.includes(letter))) {
-        console.log(line, 'triple points!');
         score += 3;
       } else {
         score += 1;

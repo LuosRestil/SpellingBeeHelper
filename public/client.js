@@ -6,6 +6,8 @@ let lettersList = [];
 let wordList = [];
 let score = 0;
 let wordNumber = 0;
+let botScore = 0;
+let botWords = [];
 
 // *** FUNCTIONS ***
 // Checks that all letters of a word are in the letters list and the word is in a dictionary
@@ -48,7 +50,9 @@ function saveLocalStorage() {
     letters: letters,
     lettersList: lettersList,
     wordList: wordList,
-    score: score
+    score: score,
+    botScore: botScore,
+    botWords: botWords
   };
   window.localStorage.setItem("saveData", JSON.stringify(data));
 }
@@ -211,6 +215,8 @@ window.addEventListener("DOMContentLoaded", event => {
     lettersList = saveData.lettersList;
     wordList = saveData.wordList;
     score = saveData.score;
+    botScore = saveData.botScore;
+    botWords = saveData.botWords;
 
     // Display magic letter, letters, score, and word list
     document.getElementById(
@@ -273,6 +279,19 @@ window.addEventListener("DOMContentLoaded", event => {
           );
           return;
         }
+        fetch('../solver', {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({"magic": magicLetter, "letters": letters})
+        })
+        .then(response => response.json())
+        .then(json => {
+          botScore = json.score;
+          botWords = json.words;
+        })
 
         // Hide initial input form
         document.getElementById("starter-form").style.display = "none";
