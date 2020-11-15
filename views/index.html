@@ -33,6 +33,7 @@
     </div>
     <div class="container">
       <h1 id="title">Spelling Bee Helper</h1>
+      <button id="show-bot-modal" class="hidden">CHEAT</button>
       <form id="starter-form">
         <div class="form-group">
           <label for="magicLetter">Center Letter</label>
@@ -102,6 +103,13 @@
 
         <br />
         <ul id="word-list"></ul>
+
+        <div id="bot-modal">
+          <i id="close-bot-modal" class="fas fa-times" ></i>
+          <h3 id="bot-score"></h3>
+          <ul id="bot-words"></ul>
+        </div>
+        
       </div>
     </div>
     <script src="/public/client.js"></script>

@@ -5,21 +5,12 @@ const fetch = require("node-fetch");
 const bodyParser = require('body-parser');
 const validate = require("./validate.js");
 const solve = require("./solver.js");
-// const { Client } = require("pg");
 const path = require("path");
 
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 8000;
 }
-
-// let client = new Client({
-//   user: "postgres",
-//   host: "localhost",
-//   database: "spelling-bee",
-//   password: "password",
-//   port: 5432
-// });
 
 app.use("/public", express.static(process.cwd() + "/public"));
 
@@ -115,11 +106,9 @@ app.get("/define", (req, res) => {
     });
 });
 
-app.post('/solver', async function(req, res) {
-  console.log(req.body);
-  let data = await solve(req.body.magic, req.body.letters);
+app.get('/solve', async function(req, res) {
+  let data = await solve(req.query.magicLetter, req.query.letters);
   res.send(data);
-
 })
 
 const listener = app.listen(port, function() {

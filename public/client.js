@@ -74,6 +74,7 @@ function deleteWord(element) {
     }
   }
   element.parentNode.parentNode.removeChild(element.parentNode);
+  renderBotWords();
 }
 
 async function checkDictionaries(word) {
@@ -134,7 +135,31 @@ async function submitWord() {
     document.getElementById("word-input").value = "";
     saveLocalStorage();
     generateWordDisplay();
+    renderBotWords();
   }
+}
+
+function renderBotWords() {
+  document.getElementById('bot-words').innerHTML = "";
+  for (let word of botWords) {
+    document.getElementById('bot-words').insertAdjacentHTML('beforeend', `<li key=${word} class=${wordList.includes(word) ? "green-text" : ""}>${word}</li>`)
+  }
+}
+
+function showBotModal() {
+  let botModal = document.getElementById("bot-modal");
+  botModal.classList.add("reveal");
+  botModal.classList.add("fade-in");
+  botModal.classList.remove("fade-out");
+}
+
+function closeBotModal() {
+  let botModal = document.getElementById("bot-modal");
+  botModal.classList.add("fade-out");
+  setTimeout(function() {
+    botModal.classList.remove("reveal");
+    botModal.classList.remove("fade-in");
+  }, 1000);
 }
 
 // *************************************************************************
@@ -180,6 +205,7 @@ window.addEventListener("DOMContentLoaded", event => {
     );
     if (confirmation) {
       window.localStorage.clear();
+      // document.getElementById("show-bot-modal").classList.add("hidden");
       location.reload();
     }
   });
@@ -196,9 +222,13 @@ window.addEventListener("DOMContentLoaded", event => {
     });
 
   // Submit button logic on click
-  document.getElementById("submit-word").addEventListener("click", function(e) {
-    submitWord();
-  });
+  document.getElementById("submit-word").addEventListener("click", submitWord);
+
+  // show bot modal event listener
+  document.getElementById("show-bot-modal").addEventListener("click", showBotModal)
+
+  // close bot modal event listener
+  document.getElementById("close-bot-modal").addEventListener("click", closeBotModal)
 
   // Check local storage for save data
   const storage = window.localStorage.getItem("saveData");
@@ -228,8 +258,15 @@ window.addEventListener("DOMContentLoaded", event => {
     document.getElementById("score").innerHTML = `Score: ${score}`;
     generateWordDisplay();
 
+    // Display bot answers and score
+    document.getElementById('bot-score').innerHTML = botScore;
+    renderBotWords();
+
     // Display game
     document.getElementById("game").setAttribute("style", "display:block");
+
+    // Display cheat modal button
+    document.getElementById("show-bot-modal").classList.remove("hidden");
 
     // Submit button logic on Enter
     document.addEventListener("keyup", function(event) {
@@ -279,34 +316,34 @@ window.addEventListener("DOMContentLoaded", event => {
           );
           return;
         }
-        fetch('../solver', {
-          method: 'post',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({"magic": magicLetter, "letters": letters})
-        })
+        fetch(`../solve?magicLetter=${magicLetter}&letters=${letters}`)
         .then(response => response.json())
         .then(json => {
           botScore = json.score;
           botWords = json.words;
+
+          // Hide initial input form
+          document.getElementById("starter-form").style.display = "none";
+
+          // Display magic letter, letters, and score
+          document.getElementById(
+            "magic-letter"
+          ).innerHTML = `Magic Letter: ${magicLetter.toUpperCase()}`;
+          document.getElementById(
+            "letters"
+          ).innerHTML = `Letters: ${letters.toUpperCase()}`;
+          document.getElementById("score").innerHTML = `Score: ${score}`;
+
+          // Display bot answers and score
+          document.getElementById('bot-score').innerHTML = botScore;
+          renderBotWords();
+          
+          // Display game
+          document.getElementById("game").setAttribute("style", "display:block");
+
+          // Display cheat modal button
+          document.getElementById("show-bot-modal").classList.remove("hidden");
         })
-
-        // Hide initial input form
-        document.getElementById("starter-form").style.display = "none";
-
-        // Display magic letter, letters, and score
-        document.getElementById(
-          "magic-letter"
-        ).innerHTML = `Magic Letter: ${magicLetter.toUpperCase()}`;
-        document.getElementById(
-          "letters"
-        ).innerHTML = `Letters: ${letters.toUpperCase()}`;
-        document.getElementById("score").innerHTML = `Score: ${score}`;
-
-        // Display game
-        document.getElementById("game").setAttribute("style", "display:block");
 
         // Submit button logic on Enter
         document.addEventListener("keyup", function(event) {
