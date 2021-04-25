@@ -104,6 +104,10 @@ async function isValid(word) {
     }
   }
 
+  if (botWords.includes(word)) {
+    return true;
+  }
+
   let dictValid = await checkDictionaries(word);
   if (dictValid) {
     return true;
