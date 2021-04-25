@@ -110,8 +110,8 @@ async function validateWebster(word) {
 async function validateOxford(word, redirect, iteration) {
   if (iteration < 2) {
     let nextIteration = iteration + 1;
-    return await axios.get(`https://www.lexico.com/definition/${redirect}`)
-      .then(response => response.data)
+    return await fetch(`https://www.lexico.com/definition/${redirect}`)
+      .then(response => response.text())
       .then(text => {
         if (text) {
           const $ = cheerio.load(text);
