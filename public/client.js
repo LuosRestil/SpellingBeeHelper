@@ -255,6 +255,12 @@ window.addEventListener("DOMContentLoaded", event => {
     botScore = saveData.botScore;
     botWords = saveData.botWords;
 
+    // temporary fix for page not loading when people have old localstorage data
+    if (!botScore || !botWords) {
+      botScore = 0;
+      botWords = [];
+    }
+
     // Display magic letter, letters, score, and word list
     document.getElementById(
       "magic-letter"
