@@ -110,109 +110,113 @@ async function validateWebster(word) {
 async function validateOxford(word, redirect, iteration) {
   if (iteration < 2) {
     let nextIteration = iteration + 1;
-    return await fetch(`https://www.lexico.com/definition/${redirect}`)
-      .then(response => response.text())
-      .then(text => {
-        if (text) {
-          const $ = cheerio.load(text);
-          let noExactMatches = $("div.no-exact-matches").text();
-          if (!noExactMatches) {
-            let hw = $("span.hw").text();
-            // THERE CAN BE MULTIPLE HWORDS, ENDING IN NUMBERS
-            let hws = hw.split(/[0-9]/);
-            let hwEqualToWord = false;
-            for (let item of hws) {
-              if (item === word) {
-                hwEqualToWord = true;
+    let text;
+    try {
+      text = await axios.get(`https://www.lexico.com/definition/${redirect}`).then(response => response.data);
+    } catch (err) {
+      text = err.response.data;
+    }
+    if (text) {
+      const $ = cheerio.load(text);
+      let noExactMatches = $("div.no-exact-matches").text();
+      if (!noExactMatches) {
+        let hw = $("span.hw").text();
+        // THERE CAN BE MULTIPLE HWORDS, ENDING IN NUMBERS
+        let hws = hw.split(/[0-9]/);
+        let hwEqualToWord = false;
+        for (let item of hws) {
+          if (item === word) {
+            hwEqualToWord = true;
+          }
+        }
+        if (hwEqualToWord) {
+          console.log("oxford: hw == word");
+          return true;
+        } else if (word.endsWith("s") && hw == word.slice(0, -1)) {
+          return true;
+        } else if (word.endsWith("es") && hw == word.slice(0, -2)) {
+          return true;
+        } else {
+          console.log("oxford: hw !== word");
+          let forms = $("span.inflection-text")
+            .find("span")
+            .toArray()
+            .map(elem => {
+              let text = $(elem).text();
+              if (text.endsWith(", ")) {
+                return text.slice(0, -2);
+              } else {
+                return text;
               }
-            }
-            if (hwEqualToWord) {
-              console.log("oxford: hw == word");
-              return true;
-            } else if (word.endsWith("s") && hw == word.slice(0, -1)) {
-              return true;
-            } else if (word.endsWith("es") && hw == word.slice(0, -2)) {
-              return true;
-            } else {
-              console.log("oxford: hw !== word");
-              let forms = $("span.inflection-text")
-                .find("span")
-                .toArray()
-                .map(elem => {
-                  let text = $(elem).text();
-                  if (text.endsWith(", ")) {
-                    return text.slice(0, -2);
-                  } else {
-                    return text;
-                  }
-                });
-              if (forms.length > 0) {
-                console.log("oxford: forms found");
-                for (let form of forms) {
-                  if (form == word) {
-                    console.log(`oxford: ${word} is a form of ${redirect}`);
-                    return true;
-                  } else if (word.endsWith("s") && form == word.slice(0, -1)) {
-                    console.log(
-                      `oxford: ${word} is a plural of a form of ${redirect}`
-                    );
-                    return true;
-                  } else if (word.endsWith("es") && form == word.slice(0, -2)) {
-                    console.log(
-                      `oxford: ${word} is a plural of a form of ${redirect}`
-                    );
-                    return true;
-                  }
-                }
+            });
+          if (forms.length > 0) {
+            console.log("oxford: forms found");
+            for (let form of forms) {
+              if (form == word) {
+                console.log(`oxford: ${word} is a form of ${redirect}`);
+                return true;
+              } else if (word.endsWith("s") && form == word.slice(0, -1)) {
+                console.log(
+                  `oxford: ${word} is a plural of a form of ${redirect}`
+                );
+                return true;
+              } else if (word.endsWith("es") && form == word.slice(0, -2)) {
+                console.log(
+                  `oxford: ${word} is a plural of a form of ${redirect}`
+                );
+                return true;
               }
-              let variations = $("div.variant")
-                .find("strong")
-                .toArray()
-                .map(elem => $(elem).text());
-              if (variations.length > 0) {
-                console.log("oxford: variations found");
-                for (let variation of variations) {
-                  if (variation == word) {
-                    console.log(`oxford: ${word} is a variant of ${redirect}`);
-                    return true;
-                  } else if (
-                    word.endsWith("s") &&
-                    variation == word.slice(0, -1)
-                  ) {
-                    console.log(
-                      `oxford: ${word} is a plural of a variant of ${redirect}`
-                    );
-                    return true;
-                  } else if (
-                    word.endsWith("s") &&
-                    variation == word.slice(0, -2)
-                  ) {
-                    console.log(
-                      `oxford: ${word} is a plural of a variant of ${redirect}`
-                    );
-                    return true;
-                  }
-                }
-              }
-            }
-          } else {
-            let similar = $("div.similar-results")
-              .find("a")
-              .attr("href");
-            if (similar && !similar.includes("?")) {
-              similar = similar.slice(12);
-              console.log(
-                `oxford: no exact matches, redirecting to "${similar}"`
-              );
-              return validateOxford(word, similar, nextIteration);
-            } else {
-              console.log("oxford: no matches or redirects");
-              return false;
             }
           }
+          let variations = $("div.variant")
+            .find("strong")
+            .toArray()
+            .map(elem => $(elem).text());
+          if (variations.length > 0) {
+            console.log("oxford: variations found");
+            for (let variation of variations) {
+              if (variation == word) {
+                console.log(`oxford: ${word} is a variant of ${redirect}`);
+                return true;
+              } else if (
+                word.endsWith("s") &&
+                variation == word.slice(0, -1)
+              ) {
+                console.log(
+                  `oxford: ${word} is a plural of a variant of ${redirect}`
+                );
+                return true;
+              } else if (
+                word.endsWith("s") &&
+                variation == word.slice(0, -2)
+              ) {
+                console.log(
+                  `oxford: ${word} is a plural of a variant of ${redirect}`
+                );
+                return true;
+              }
+            }
+          }
+        }
+      } else {
+        let similar = $("div.similar-results")
+          .find("a")
+          .attr("href");
+        if (similar && !similar.includes("?")) {
+          similar = similar.slice(12);
+          console.log(
+            `oxford: no exact matches, redirecting to "${similar}"`
+          );
+          return validateOxford(word, similar, nextIteration);
+        } else {
+          console.log("oxford: no matches or redirects");
           return false;
         }
-      });
+      }
+      return false;
+    }
+
+    
   } else {
     return false;
   }
