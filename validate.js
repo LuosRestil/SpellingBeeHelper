@@ -1,12 +1,15 @@
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
+const axios = require("axios");
+const { response } = require("express");
 
 async function validateWebster(word) {
   console.log(`word == ${word}`);
-  return await fetch(`https://www.merriam-webster.com/dictionary/${word}`)
+  try {
+    return await axios.get(`https://www.merriam-webster.com/dictionary/${word}`)
     .then(response => {
       if (response.status == 200) {
-        return response.text();
+        return response.data;
       } else {
         console.log(`webster: 404 not found`);
       }
@@ -99,20 +102,23 @@ async function validateWebster(word) {
       }
       return false;
     });
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 async function validateOxford(word, redirect, iteration) {
   if (iteration < 2) {
     let nextIteration = iteration + 1;
-    return await fetch(`https://www.lexico.com/definition/${redirect}`)
-      .then(response => response.text())
+    return await axios.get(`https://www.lexico.com/definition/${redirect}`)
+      .then(response => response.data)
       .then(text => {
         if (text) {
           const $ = cheerio.load(text);
           let noExactMatches = $("div.no-exact-matches").text();
           if (!noExactMatches) {
             let hw = $("span.hw").text();
-            // THERE CAN BE MUlTIPLY HWORDS, ENDING IN NUMBERS
+            // THERE CAN BE MULTIPLE HWORDS, ENDING IN NUMBERS
             let hws = hw.split(/[0-9]/);
             let hwEqualToWord = false;
             for (let item of hws) {

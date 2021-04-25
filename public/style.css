@@ -127,9 +127,16 @@ li:hover .fa-times-circle {
   position: absolute;
   left: 10%;
   top: 10%;
-  border: 1px solid red;
+  border: 3px solid white;
+  border-radius: 10px;
+  background: linear-gradient(130deg, #1cb5e0 0%, #000851 100%);
+  box-shadow: 1rem 1rem 2rem black;
   width: 80%;
   height: 80%;
+}
+
+#bot-score {
+  color: white;
 }
 
 #close-bot-modal {
@@ -193,7 +200,7 @@ li:hover .fa-times-circle {
     font-size: 1.5rem;
   }
 
-  #word-list {
+  ul {
     grid-column-start: 1;
     grid-column-end: 4;
     margin-top: 1rem;

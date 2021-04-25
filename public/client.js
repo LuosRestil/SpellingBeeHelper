@@ -225,7 +225,14 @@ window.addEventListener("DOMContentLoaded", event => {
   document.getElementById("submit-word").addEventListener("click", submitWord);
 
   // show bot modal event listener
-  document.getElementById("show-bot-modal").addEventListener("click", showBotModal)
+  document.getElementById("show-bot-modal").addEventListener("click", function() {
+    let confirmation = confirm(
+      `Our list is worth ${botScore} points. Would you like to see our list?`
+    );
+    if (confirmation) {
+      showBotModal();
+    }
+  })
 
   // close bot modal event listener
   document.getElementById("close-bot-modal").addEventListener("click", closeBotModal)
@@ -259,7 +266,7 @@ window.addEventListener("DOMContentLoaded", event => {
     generateWordDisplay();
 
     // Display bot answers and score
-    document.getElementById('bot-score').innerHTML = botScore;
+    document.getElementById('bot-score').innerHTML = `Our score: ${botScore}`;
     renderBotWords();
 
     // Display game
@@ -335,7 +342,7 @@ window.addEventListener("DOMContentLoaded", event => {
           document.getElementById("score").innerHTML = `Score: ${score}`;
 
           // Display bot answers and score
-          document.getElementById('bot-score').innerHTML = botScore;
+          document.getElementById('bot-score').innerHTML = `Our score: ${botScore}`;
           renderBotWords();
           
           // Display game
